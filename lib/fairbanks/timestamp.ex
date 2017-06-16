@@ -1,9 +1,13 @@
 defmodule Fairbanks.Timestamp do
-  @doc """
+  @moduledoc """
   Provides an interface for custom date formatting from the source RSS feed.
   """
   @behaviour Ecto.Type
   @months %{jan: 1, feb: 2, mar: 3, apr: 4, may: 5, jun: 6, jul: 7, aug: 8, sep: 9, oct: 10, nov: 11, dec: 12}
+
+  ###########################
+  # Ecto.Type callbacks
+  ###########################
 
   def type, do: :date
 
@@ -24,8 +28,8 @@ defmodule Fairbanks.Timestamp do
   @spec cast(Date) :: {:ok, Date} | :error
   def cast(%Date{} = date), do:
     {:ok, date}
-
-  def cast(_), do: :error
+  def cast(_), do:
+    :error
 
   # When loading data from the database,
   # From tuple back to date...
@@ -42,9 +46,12 @@ defmodule Fairbanks.Timestamp do
   @spec dump(Date) :: {:ok, tuple} | :error
   def dump(%Date{year: year, month: month, day: day}), do:
     {:ok, {year, month, day}}
-
   def dump(_), do:
     :error
+
+  ###########################
+  # Helpers
+  ###########################
 
   # Example input: "Fri, 16 Jun 2017 00:00:00 -0400"
   @spec to_date(String) :: { :ok, Date } | { :error, String }

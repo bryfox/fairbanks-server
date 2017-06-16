@@ -12,8 +12,8 @@ defmodule Fairbanks do
       supervisor(Fairbanks.Repo, []),
       # Start the endpoint when the application starts
       supervisor(Fairbanks.Endpoint, []),
-      # Start your own worker by calling: Fairbanks.Worker.start_link(arg1, arg2, arg3)
-      # worker(Fairbanks.Worker, [arg1, arg2, arg3]),
+      # Periodic data fetching
+      supervisor(Fairbanks.Importing.Supervisor, []),
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
