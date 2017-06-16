@@ -12,12 +12,7 @@ defmodule Fairbanks.ForecastView do
   def render("forecast.json", %{forecast: forecast}) do
     %{id: forecast.id,
       title: forecast.title,
-      permalink: forecast.permalink,
-      soundcloud_url: forecast.soundcloud_url,
-      soundcloud_id: forecast.soundcloud_id,
-      today_desc: forecast.today_desc,
-      tonight_desc: forecast.tonight_desc,
-      tomorrow_desc: forecast.tomorrow_desc,
-      tomorrow_night_desc: forecast.tomorrow_night_desc}
+      uri: forecast.uri,
+      description: forecast.description}
   end
 end

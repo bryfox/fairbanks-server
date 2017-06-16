@@ -3,7 +3,7 @@ defmodule Fairbanks.ForecastTest do
 
   alias Fairbanks.Forecast
 
-  @valid_attrs %{soundcloud_id: "some content", soundcloud_url: "some content", title: "some content", today_desc: "some content", tomorrow_desc: "some content", tomorrow_night_desc: "some content", tonight_desc: "some content", permalink: "some content", id: "7488a646-e31f-11e4-aace-600308960662"}
+  @valid_attrs %{description: "some content", rss_timestamp: "Thu, 15 Jun 2017 00:00:00 -0400", title: "Daily Forecast: June 15, 2017", uri: "http://www.fairbanksmuseum.org/eye-on-the-sky/2017-06-15", id: "7488a646-e31f-11e4-aace-600308960662"}
   @invalid_attrs %{}
 
   test "changeset with valid attributes" do
