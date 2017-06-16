@@ -20,7 +20,12 @@ defmodule Fairbanks.Router do
   end
 
   # Other scopes may use custom stacks.
-  # scope "/api", Fairbanks do
-  #   pipe_through :api
-  # end
+  scope "/api", Fairbanks do
+    pipe_through :api
+
+    scope "/v1" do
+      get "/", ApiStatusController, :index
+      resources "/forecasts", ForecastController, except: [:new, :edit]
+    end
+  end
 end

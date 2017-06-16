@@ -34,10 +34,11 @@ config :logger, :console, format: "[$level] $message\n"
 config :phoenix, :stacktrace_depth, 20
 
 # Configure your database
+# Reminder: `ALTER ROLE fairbanksdev CREATEDB;`
 config :fairbanks, Fairbanks.Repo,
   adapter: Ecto.Adapters.Postgres,
-  username: "postgres",
-  password: "postgres",
+  username: "fairbanksdev",
+  password: "fairbanksdev",
   database: "fairbanks_dev",
   hostname: "localhost",
   pool_size: 10

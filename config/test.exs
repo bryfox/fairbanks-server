@@ -12,8 +12,8 @@ config :logger, level: :warn
 # Configure your database
 config :fairbanks, Fairbanks.Repo,
   adapter: Ecto.Adapters.Postgres,
-  username: "postgres",
-  password: "postgres",
+  username: "fairbanksdev",
+  password: "fairbanksdev",
   database: "fairbanks_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
