@@ -13,6 +13,7 @@ defmodule Fairbanks.ForecastView do
     %{id: forecast.id,
       title: forecast.title,
       uri: forecast.uri,
+      publication_date: forecast.publication_date,
       description: forecast.description}
   end
 end

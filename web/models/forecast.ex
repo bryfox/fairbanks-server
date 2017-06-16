@@ -7,7 +7,7 @@ defmodule Fairbanks.Forecast do
     field :title, :string
     field :uri, :string
     field :description, :string
-    field :rss_timestamp, :string
+    field :publication_date, Fairbanks.Timestamp
     timestamps(inserted_at: :created_at, updated_at: :updated_at, type: :utc_datetime)
   end
 
@@ -16,8 +16,9 @@ defmodule Fairbanks.Forecast do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:id, :title, :uri, :description, :rss_timestamp])
-    |> validate_required([:title, :uri, :description, :rss_timestamp])
+    |> cast(params, [:id, :title, :uri, :description, :publication_date])
+    |> validate_required([:title, :uri, :description, :publication_date])
+    |> unique_constraint(:uri) # TODO: test
   end
 
 end
