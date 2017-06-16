@@ -13,7 +13,7 @@ defmodule Fairbanks.Repo.Migrations.CreateForecast do
       add :tomorrow_desc, :text, null: true
       add :tomorrow_night_desc, :text, null: true
 
-      timestamps(inserted_at: :created_at, updated_at: :updated_at, type: :utc_datetime)
+      timestamps(inserted_at: :created_at, updated_at: :updated_at, type: :timestamptz)
     end
 
     create unique_index(:forecasts, [:permalink])
