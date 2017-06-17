@@ -19,6 +19,8 @@ config :fairbanks, Fairbanks.Endpoint,
 # Do not print debug messages in production
 config :logger, level: :info
 
+config :iex, default_prompt: "!!PRODUCTION!! (%counter)>"
+
 # ## SSL Support
 #
 # To get SSL working, you will need to add the `https` key
