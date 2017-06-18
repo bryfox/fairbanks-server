@@ -1,6 +1,14 @@
 defmodule Fairbanks.Importing.DetailsBroker do
   require Logger
+  use GenServer
   alias Fairbanks.Forecast
+
+  @doc """
+  Once started, will await an :import call
+  """
+  def start_link do
+    GenServer.start_link(__MODULE__, name: __MODULE__)
+  end
 
   @doc """
   Download and persist details from the forecast's URI.
@@ -11,8 +19,33 @@ defmodule Fairbanks.Importing.DetailsBroker do
     :error - update was attempted, but failed. If forecast.needs_details? is still true,
         then this update may be retried later.
   """
-  @spec import() :: :ok | :ignore | :error
-  def import do
+  def import(broker) do
+    GenServer.call(broker, {:import})
+  end
+
+  ###########################
+  # GenServer callbacks
+  ###########################
+
+  def init(state) do
+    {:ok, state}
+  end
+
+  def handle_call({:import}, from, state) do
+    {:reply, import_details(), state}
+  end
+
+  @doc """
+  Download and persist details from the forecast's URI.
+  
+  Returns a state:
+    :ok - forecast details were updated in DB
+    :ignore - no updates were needed, so the update was skipped
+    :error - update was attempted, but failed. If forecast.needs_details? is still true,
+        then this update may be retried later.
+  """
+  @spec import_details() :: :ok | :ignore | :error
+  defp import_details do
     updatable_forecast()
     |> download()
     |> parse()
@@ -27,14 +60,11 @@ defmodule Fairbanks.Importing.DetailsBroker do
   # Returns the latest forecast, if it needs details populated, or :ignore
   defp updatable_forecast do
     forecast = Forecast.latest()
-    Logger.info("DetailsBroker forecast " <> inspect(Forecast.needs_details?(forecast)))
     if Forecast.needs_details?(forecast), do: forecast, else: :ignore
   end
 
   @spec download(String) :: { atom, any }
   defp download(%Forecast{uri: url} = forecast) when is_binary(url) do
-    # FIXME: remove after testing
-    url = "http://localhost:8000/2017-06-15.html"
     Logger.info("DetailsBroker downloading " <> url)
     # TODO: Could specify retry with :ignore when status code deems appropriate
     case HTTPoison.get(url) do

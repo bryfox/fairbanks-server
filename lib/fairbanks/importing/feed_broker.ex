@@ -1,28 +1,56 @@
 defmodule Fairbanks.Importing.FeedBroker do
   require Logger
+  use GenServer
   alias Fairbanks.Forecast
 
   # TODO: move to env config
   @feed_url "http://localhost:8000/rss.xml"
 
   @doc """
-  Download the RSS feed from the remote URL
+  Once started, will await an :import call
   """
-  @spec import() :: {:ok, integer} | {:error, String}
-  def import do
-    case fetch_rss?() do
-      false -> :ignore
-      true -> @feed_url
-              |> download()
-              |> parse()
-              |> parse_entries()
-              |> report_status()
-    end
+  def start_link do
+    GenServer.start_link(__MODULE__, name: __MODULE__)
+  end
+
+  def import(broker) do
+    GenServer.call(broker, {:import})
+  end
+
+  ###########################
+  # GenServer callbacks
+  ###########################
+
+  def init(state) do
+    {:ok, state}
+  end
+
+  def handle_call({:import}, from, state) do
+    {:reply, import_if_needed(), state}
   end
 
   ###########################
   # Update pipeline
   ###########################
+
+  defp import_if_needed do
+    case fetch_rss?() do
+      true -> fetch_rss()
+      false -> :ignore
+    end
+  end
+
+  @doc """
+  Download the RSS feed from the remote URL
+  """
+  @spec fetch_rss() :: {:ok, integer} | {:error, String}
+  defp fetch_rss do
+    @feed_url
+    |> download()
+    |> parse()
+    |> parse_entries()
+    |> report_status()
+  end
 
   @spec download(String) :: { atom, any }
   defp download(url) do
