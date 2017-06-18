@@ -37,7 +37,7 @@ defmodule Fairbanks.Forecast do
   @spec latest() :: Forecast.t | nil
   def latest do
     __MODULE__
-    |> Query.first(:created_at)
+    |> Query.first(desc: :created_at)
     |> Repo.one
   end
 

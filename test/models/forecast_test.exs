@@ -21,29 +21,35 @@ defmodule Fairbanks.ForecastTest do
     assert Forecast.latest == forecast
   end
 
-  test "that we have the latest" do
+  test "we have the latest" do
     Repo.insert! %Forecast{publication_date: Date.utc_today()}
     assert Forecast.have_latest?
   end
 
-  test "that we don't have the latest when publication date is missing" do
+  test "we don't have the latest when publication date is missing" do
     Repo.insert! %Forecast{}
     assert false == Forecast.have_latest?
   end
 
-  test "that we don't have the latest when publication date is old" do
+  test "we don't have the latest when publication date is old" do
     Repo.insert! %Forecast{publication_date: ~D[2017-01-01]}
     assert false == Forecast.have_latest?
   end
 
-  test "that an existing forecast is not needed" do
+  test "an existing forecast is not needed" do
     Repo.insert! %Forecast{publication_date: ~D[2017-01-01]}
     assert false == Forecast.needed_for_date?(~D[2017-01-01])
   end
 
-  test "that a missing forecast is needed" do
+  test "a missing forecast is needed" do
     Repo.insert! %Forecast{publication_date: ~D[2017-01-01]}
     assert Forecast.needed_for_date?(~D[2017-01-02])
+  end
+
+  test "latest returns most recent" do
+    Repo.insert! %Forecast{publication_date: ~D[2017-01-01]}
+    forecast = Repo.insert! %Forecast{publication_date: ~D[2017-01-02]}
+    assert Forecast.latest() == forecast
   end
 
 end
