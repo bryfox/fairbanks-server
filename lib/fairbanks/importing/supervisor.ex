@@ -9,8 +9,7 @@ defmodule Fairbanks.Importing.Supervisor do
     import Supervisor.Spec
 
     children = [
-      # TODO: get rid of :temporary
-      worker(Fairbanks.Importing.Coordinator, [], restart: :temporary)
+      worker(Fairbanks.Importing.Coordinator, [])
     ]
     supervise(children, [strategy: :one_for_one, name: Fairbanks.Importing.Supervisor])
   end

@@ -14,6 +14,10 @@ defmodule Fairbanks.ForecastView do
       title: forecast.title,
       uri: forecast.uri,
       publication_date: forecast.publication_date,
-      description: forecast.description}
+      description: forecast.description,
+      soundcloud_id: forecast.soundcloud_id,
+      detailed_summary: forecast.detailed_summary,
+      extended_summary: forecast.extended_summary,
+      recreational_summary: forecast.recreational_summary}
   end
 end

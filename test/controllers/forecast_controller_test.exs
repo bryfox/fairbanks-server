@@ -22,7 +22,11 @@ defmodule Fairbanks.ForecastControllerTest do
       "title" => forecast.title,
       "uri" => forecast.uri,
       "publication_date" => forecast.publication_date,
-      "description" => forecast.description}
+      "description" => forecast.description,
+      "detailed_summary" => forecast.detailed_summary,
+      "extended_summary" => forecast.extended_summary,
+      "recreational_summary" => forecast.recreational_summary,
+      "soundcloud_id" => forecast.soundcloud_id }
   end
 
   test "renders page not found when id is nonexistent", %{conn: conn} do
@@ -67,4 +71,14 @@ defmodule Fairbanks.ForecastControllerTest do
     assert response(conn, 204)
     refute Repo.get(Forecast, forecast.id)
   end
+
+  test "renders the forecast summary as an object when source is an array", %{conn: conn} do
+    scraped_data = [%{content: "p1"}, %{content: "p2"}]
+    forecast = Repo.insert! %Forecast{detailed_summary: Map.new([{Forecast.summary_key, scraped_data}])}
+    conn = put conn, forecast_path(conn, :update, forecast), forecast: @valid_attrs
+    summary = json_response(conn, 200)["data"]["detailed_summary"]
+    assert is_map(summary)
+    assert is_list(summary[Forecast.summary_key |> Atom.to_string])
+  end
+
 end
