@@ -39,7 +39,8 @@ defmodule Fairbanks.Mixfile do
      {:gettext, "~> 0.11"},
      {:cowboy, "~> 1.0"},
      {:httpoison, "~> 0.11"},
-     {:feeder_ex, "~> 1.1.0"}
+     {:feeder_ex, "~> 1.1.0"},
+     {:floki, "~> 0.17.0"}
    ]
   end
 

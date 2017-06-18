@@ -41,30 +41,28 @@ defmodule Fairbanks.Importing.Coordinator do
   # Helpers
   ###########################
 
-  # TODO: abstract the GenServer/worker pattern to give us the :ignore/:ok/:error pattern
+  # See handle_info(:update_check)
+  defp schedule_update_check, do: Process.send_after(self(), :update_check, @update_interval)
 
-  defp update_check do
+  # TODO: abstract the GenServer/worker pattern to give us the :ignore/:ok/:error pattern
+  defp update_check, do:
     if fetch_rss?(), do: :ok, else: :ignore
-  end
 
   # check for remote updates if we don't have latest already,
   # and if it's reasonably late in the day (Fairbanks Museum time)
-  defp fetch_rss? do
-    DateTime.utc_now().hour >= 5 && not(Forecast.have_latest?)
+  defp fetch_rss?, do:
+    fetch_rss?(5)
+
+  defp fetch_rss?(after_utc_hour) when is_integer(after_utc_hour) do
+    late_enough = DateTime.utc_now().hour >= hour
+    unless late_enough, do: Logger.info("Scraping disabled (time of day)")
+    late_enough && not(Forecast.have_latest?)
   end
 
-  defp fetch_rss(:ok), do:
-    Fairbanks.Importing.FeedBroker.import
+  defp fetch_rss(:ok), do: Fairbanks.Importing.FeedBroker.import
   defp fetch_rss(:ignore), do: :ignore
 
-  defp fetch_details(:ok) do
-    Logger.debug("TODO: fetch details")
-  end
+  defp fetch_details(:ok), do: Fairbanks.Importing.DetailsBroker.import
   defp fetch_details(:ignore), do: :ignore
-
-  # See handle_info(:update_check)
-  defp schedule_update_check  do
-    Process.send_after(self(), :update_check, @update_interval)
-  end
 
 end
