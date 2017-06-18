@@ -23,6 +23,10 @@ defmodule Fairbanks.Importing.DetailsBroker do
     GenServer.call(broker, {:import})
   end
 
+  def stop(broker, reason \\ :normal, timeout \\ :infinity) do
+    GenServer.stop(broker, reason, timeout)
+  end
+
   ###########################
   # GenServer callbacks
   ###########################
@@ -34,6 +38,13 @@ defmodule Fairbanks.Importing.DetailsBroker do
   def handle_call({:import}, from, state) do
     {:reply, import_details(), state}
   end
+
+  def terminate(reason, state) do
+  end
+
+  ###########################
+  # Update pipeline
+  ###########################
 
   @doc """
   Download and persist details from the forecast's URI.
@@ -52,10 +63,6 @@ defmodule Fairbanks.Importing.DetailsBroker do
     |> build_changeset()
     |> update_db()
   end
-
-  ###########################
-  # Update pipeline
-  ###########################
 
   # Returns the latest forecast, if it needs details populated, or :ignore
   defp updatable_forecast do

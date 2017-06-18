@@ -17,6 +17,10 @@ defmodule Fairbanks.Importing.FeedBroker do
     GenServer.call(broker, {:import})
   end
 
+  def stop(broker, reason \\ :normal, timeout \\ :infinity) do
+    GenServer.stop(broker, reason, timeout)
+  end
+
   ###########################
   # GenServer callbacks
   ###########################
@@ -27,6 +31,9 @@ defmodule Fairbanks.Importing.FeedBroker do
 
   def handle_call({:import}, from, state) do
     {:reply, import_if_needed(), state}
+  end
+
+  def terminate(reason, state) do
   end
 
   ###########################

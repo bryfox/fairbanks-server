@@ -8,28 +8,43 @@ defmodule Fairbanks.Importing.Coordinator do
   use GenServer
 
   @one_hour 1000 * 60 * 60
-  # @update_interval @one_hour
-  @update_interval 3000
+  @default_update_interval @one_hour
 
   @doc """
   Start periodic update checks & downloads.
-  This is the only public-facing interface;
+  This is the primary public-facing interface;
   update behavior will be managed internally.
   """
   def start_link do
     GenServer.start_link(__MODULE__, name: __MODULE__)
   end
 
+  def import_once do
+    {:ok, feed_broker } = Importing.FeedBroker.start_link
+    {:ok, details_broker } = Importing.DetailsBroker.start_link
+    Logger.info Importing.FeedBroker.import(feed_broker)
+    Logger.info Importing.DetailsBroker.import(details_broker)
+    Importing.FeedBroker.stop(feed_broker, :normal)
+    Importing.DetailsBroker.stop(details_broker, :normal)
+  end
+
   ###########################
   # GenServer callbacks
   ###########################
 
+  @doc """
+  Starts brokers for feed & detail importing, and periodically checks for updates.
+  An :update_interval can be specified in the initial state, or will default to one hour.
+  Regardless, data brokers may skip update checks when deemed appropriate.
+  Begins updates after the next update interval.
+  """
   def init(state) do
     {:ok, feed_broker } = Importing.FeedBroker.start_link
     {:ok, details_broker } = Importing.DetailsBroker.start_link
+    state = Keyword.put_new(state, :update_interval, @default_update_interval)
     state = Keyword.put_new(state, :feed_broker, feed_broker)
     state = Keyword.put_new(state, :details_broker, details_broker)
-    schedule_update_check()
+    schedule_update_check(state[:update_interval])
     {:ok, state}
   end
 
@@ -45,8 +60,7 @@ defmodule Fairbanks.Importing.Coordinator do
     result = Importing.DetailsBroker.import(state[:details_broker])
     Logger.info("DetailsBroker result: " <> inspect(result))
 
-    # result = fetch_rss() && fetch_details()
-    schedule_update_check()
+    schedule_update_check(state[:update_interval])
     {:noreply, state}
   end
 
@@ -56,6 +70,6 @@ defmodule Fairbanks.Importing.Coordinator do
 
   # Responsible for (continually) scheduling a new update check
   # See handle_info(:update_check)
-  defp schedule_update_check, do: Process.send_after(self(), :update_check, @update_interval)
+  defp schedule_update_check(update_interval), do: Process.send_after(self(), :update_check, update_interval)
 
 end
