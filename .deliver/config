@@ -1,0 +1,49 @@
+APP="fairbanks"
+
+BUILD_HOST="FairbanksBuild" # defined in your local .ssh/config
+BUILD_USER="fairbanks"
+BUILD_AT="/tmp/fairbanks/$APP/builds"
+
+RELEASE_DIR="$BUILD_AT/_build/$TARGET_MIX_ENV/rel/$APP"
+
+STAGING_HOSTS="FairbanksStaging" # defined in your local .ssh/config
+STAGING_USER="fairbanks"
+TEST_AT="/Users/$STAGING_USER"
+
+# PRODUCTION_HOSTS=""
+# PRODUCTION_USER=""
+# DELIVER_TO=""
+
+# For *Phoenix* projects, symlink prod.secret.exs to our tmp source
+# Note: first SCP config file to `$_prod_secret_path` on build server
+pre_erlang_get_and_update_deps() {
+  local _prod_secret_path="/Users/$BUILD_USER/config/prod.secret.exs"
+  echo "TARGET_MIX_ENV: $TARGET_MIX_ENV"
+  if [ "$TARGET_MIX_ENV" = "prod" ]; then
+    __sync_remote "
+      ln -sfn '$_prod_secret_path' '$BUILD_AT/config/prod.secret.exs'
+    "
+  fi
+}
+
+pre_erlang_clean_compile() {
+  status "Installing NPM dependencies"
+  __sync_remote "  # runs the commands on the build host
+    [ -f ~/.profile ] && source ~/.profile # load profile
+    set -e # fail if any command fails (recommended)
+    cd '$BUILD_AT'
+    npm install $SILENCE
+  "
+
+  status "Building production assets"
+  __sync_remote "
+    [ -f ~/.profile ] && source ~/.profile
+    set -e # fail if any command fails (recommended)
+    cd '$BUILD_AT'
+    mkdir -p priv/static
+    # Generate production assets
+    ./node_modules/brunch/bin/brunch b -p
+    # Run phoenix digets to create cache-busting filenames
+    APP='$APP' MIX_ENV='$TARGET_MIX_ENV' $MIX_CMD phoenix.digest $SILENCE
+  "
+}

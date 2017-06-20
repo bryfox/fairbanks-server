@@ -19,7 +19,11 @@ defmodule Fairbanks.Mixfile do
   def application do
     [mod: {Fairbanks, []},
      applications: [:phoenix, :phoenix_pubsub, :phoenix_html, :cowboy, :logger, :gettext,
-                    :phoenix_ecto, :postgrex, :httpoison]]
+                    :phoenix_ecto, :postgrex, :httpoison,
+                    :feeder_ex, :floki,
+                    # Add edeliver to the END of the list
+                    :edeliver
+                    ]]
   end
 
   # Specifies which paths to compile per environment.
@@ -40,7 +44,9 @@ defmodule Fairbanks.Mixfile do
      {:cowboy, "~> 1.0"},
      {:httpoison, "~> 0.11"},
      {:feeder_ex, "~> 1.1.0"},
-     {:floki, "~> 0.17.0"}
+     {:floki, "~> 0.17.0"},
+     {:edeliver, "~> 1.4.2"},
+     {:distillery, "~> 1.4", warn_missing: false}
    ]
   end
 
