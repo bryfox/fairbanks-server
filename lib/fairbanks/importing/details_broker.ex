@@ -35,26 +35,27 @@ defmodule Fairbanks.Importing.DetailsBroker do
     {:ok, state}
   end
 
-  def handle_call({:import}, from, state) do
+  @doc """
+  Download and persist details from the forecast's URI.
+  
+  The reply is an atom representing a result:
+    :ok - forecast details were updated in DB
+    :ignore - no updates were needed, so the update was skipped
+    :error - update was attempted, but failed. If forecast.needs_details? is still true,
+        then this update may be retried later.
+  """
+  def handle_call({:import}, _from, state) do
     {:reply, import_details(), state}
   end
 
-  def terminate(reason, state) do
+  def terminate(_reason, _state) do
   end
 
   ###########################
   # Update pipeline
   ###########################
 
-  @doc """
-  Download and persist details from the forecast's URI.
-  
-  Returns a state:
-    :ok - forecast details were updated in DB
-    :ignore - no updates were needed, so the update was skipped
-    :error - update was attempted, but failed. If forecast.needs_details? is still true,
-        then this update may be retried later.
-  """
+  # see handle_call
   @spec import_details() :: :ok | :ignore | :error
   defp import_details do
     updatable_forecast()

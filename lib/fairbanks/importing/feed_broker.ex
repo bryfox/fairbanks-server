@@ -29,11 +29,21 @@ defmodule Fairbanks.Importing.FeedBroker do
     {:ok, state}
   end
 
-  def handle_call({:import}, from, state) do
+  @doc """
+  Download the RSS feed from the remote URL, if needed.
+  If we already have the forecast for today, the download is skipped.
+
+  The reply is an atom representing a result:
+    :ok - forecast details were updated in DB
+    :ignore - no updates were needed, so the update was skipped
+    :error - update was attempted, but failed. If forecast.needs_details? is still true,
+        then this update may be retried later.
+  """
+  def handle_call({:import}, _from, state) do
     {:reply, import_if_needed(), state}
   end
 
-  def terminate(reason, state) do
+  def terminate(_reason, _state) do
   end
 
   ###########################
@@ -47,9 +57,6 @@ defmodule Fairbanks.Importing.FeedBroker do
     end
   end
 
-  @doc """
-  Download the RSS feed from the remote URL
-  """
   @spec fetch_rss() :: {:ok, integer} | {:error, String}
   defp fetch_rss do
     @feed_url
