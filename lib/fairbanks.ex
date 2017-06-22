@@ -11,10 +11,11 @@ defmodule Fairbanks do
       # Start the Ecto repository
       supervisor(Fairbanks.Repo, []),
       # Start the endpoint when the application starts
-      supervisor(Fairbanks.Endpoint, []),
-      # Periodic data fetching
-      supervisor(Fairbanks.Importing.Supervisor, []),
+      supervisor(Fairbanks.Endpoint, [])
     ]
+
+    # Unless disabled by config, also supervise workers for periodic data fetching
+    children = if run_importers?(), do: children ++ [supervisor(Fairbanks.Importing.Supervisor, [])], else: children
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
     # for other strategies and supported options
@@ -28,4 +29,8 @@ defmodule Fairbanks do
     Fairbanks.Endpoint.config_change(changed, removed)
     :ok
   end
+
+  defp run_importers?, do:
+    Application.get_env(:fairbanks, Fairbanks.Importing)[:autostart] == true
+
 end

@@ -3,18 +3,15 @@ defmodule Fairbanks.Importing.FeedBroker do
   use GenServer
   alias Fairbanks.Forecast
 
-  # TODO: move to env config
-  @feed_url "http://localhost:8000/rss.xml"
-
   @doc """
   Once started, will await an :import call
   """
-  def start_link do
-    GenServer.start_link(__MODULE__, name: __MODULE__)
+  def start_link(user_agent) do
+    GenServer.start_link(__MODULE__, user_agent, name: __MODULE__)
   end
 
-  def import(broker) do
-    GenServer.call(broker, {:import})
+  def import(broker, url) do
+    GenServer.call(broker, {:import, url})
   end
 
   def stop(broker, reason \\ :normal, timeout \\ :infinity) do
@@ -25,7 +22,9 @@ defmodule Fairbanks.Importing.FeedBroker do
   # GenServer callbacks
   ###########################
 
-  def init(state) do
+  def init(user_agent) do
+    Logger.info("FeedBroker initialized with UA " <> inspect(user_agent))
+    state = [user_agent: user_agent]
     {:ok, state}
   end
 
@@ -39,40 +38,41 @@ defmodule Fairbanks.Importing.FeedBroker do
     :error - update was attempted, but failed. If forecast.needs_details? is still true,
         then this update may be retried later.
   """
-  def handle_call({:import}, _from, state) do
-    {:reply, import_if_needed(), state}
+  def handle_call({:import, url}, _from, state) do
+    {:reply, import_if_needed(url, state[:user_agent]), state}
   end
 
-  def terminate(_reason, _state) do
-  end
+  # def terminate(_reason, _state) do
+  # end
 
   ###########################
   # Update pipeline
   ###########################
 
-  defp import_if_needed do
+  defp import_if_needed(url, ua) when is_binary(url) do
     case fetch_rss?() do
-      true -> fetch_rss()
+      true -> fetch_rss(url, ua)
       false -> :ignore
     end
   end
 
-  @spec fetch_rss() :: {:ok, integer} | {:error, String}
-  defp fetch_rss do
-    @feed_url
-    |> download()
+  @spec fetch_rss(String, String) :: {:ok, integer} | {:error, String}
+  defp fetch_rss(url, ua) when is_binary(url) do
+    url
+    |> download(ua)
     |> parse()
     |> parse_entries()
     |> report_status()
   end
+  defp fetch_rss(nil, _), do: Logger.warn("Ignoring request for nil feed URL") && :ignore
 
-  @spec download(String) :: { atom, any }
-  defp download(url) do
+  @spec download(String, String) :: { atom, any }
+  defp download(url, user_agent) do
     Logger.info("FeedBroker downloading " <> url)
-    case HTTPoison.get(url) do
+    case HTTPoison.get(url, [{"User-Agent", user_agent}]) do
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
         { :ok, body }
-      {:ok, %HTTPoison.Response{status_code: code, body: _}} ->
+      {:ok, %HTTPoison.Response{status_code: code}} ->
         {:error, "Unexpected HTTP status: " <> inspect(code)}
       {:ok, other} ->
         { :error, "Unexpected response: " <> inspect(other)}
@@ -93,6 +93,8 @@ defmodule Fairbanks.Importing.FeedBroker do
   defp parse_entries({:error, err}), do: Logger.error(inspect(err)) && :error
   # Passthrough error, not from FeederEx:
   defp parse_entries(:error), do: :error
+  # Parsing errors from Feeder:
+  defp parse_entries(_), do: :error
 
   # Provides return value to public API
   @spec report_status(integer | :error) :: :ignore | :ok | :error

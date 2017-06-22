@@ -46,7 +46,8 @@ defmodule Fairbanks.Mixfile do
      {:feeder_ex, "~> 1.1.0"},
      {:floki, "~> 0.17.0"},
      {:edeliver, "~> 1.4.2"},
-     {:distillery, "~> 1.4", warn_missing: false}
+     {:distillery, "~> 1.4", warn_missing: false},
+     {:mock, "~> 0.2.0", only: :test}
    ]
   end
 

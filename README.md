@@ -26,6 +26,10 @@ Ready to run in production? Please [check our deployment guides](http://www.phoe
 ### Deployment server setup
 
 - Create postgres user & DB based on config file. Migrations can be run as below.
+- Set required env vars:
+    + `PORT`: for Cowboy
+    + `FAIRBANKS_FEED_URL`: e.g., 'https://example.com/rss.xml'. Defaults to localhost (see Mocks server below)
+    + `FAIRBANKS_USER_AGENT`: e.g., 'myapp/v1'
 
 ### Distillery & EDeliver
 
@@ -67,3 +71,7 @@ $ ./node_modules/brunch/bin/brunch b -p
 # Digest assets (e.g. for cache busting)
 $ MIX_ENV=prod mix phoenix.digest
 ```
+
+## Mocks server
+
+The mocks directory contains a couple of static html files, and a simple server for development. Run `cd mocks && python server.py` (assuming python 2.x).

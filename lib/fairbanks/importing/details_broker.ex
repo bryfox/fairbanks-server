@@ -6,8 +6,8 @@ defmodule Fairbanks.Importing.DetailsBroker do
   @doc """
   Once started, will await an :import call
   """
-  def start_link do
-    GenServer.start_link(__MODULE__, name: __MODULE__)
+  def start_link(user_agent) do
+    GenServer.start_link(__MODULE__, user_agent, name: __MODULE__)
   end
 
   @doc """
@@ -31,7 +31,9 @@ defmodule Fairbanks.Importing.DetailsBroker do
   # GenServer callbacks
   ###########################
 
-  def init(state) do
+  def init(user_agent) do
+    Logger.info("DetailsBroker initialized with UA " <> inspect(user_agent))
+    state = [user_agent: user_agent]
     {:ok, state}
   end
 
@@ -45,37 +47,38 @@ defmodule Fairbanks.Importing.DetailsBroker do
         then this update may be retried later.
   """
   def handle_call({:import}, _from, state) do
-    {:reply, import_details(), state}
+    {:reply, import_details(state[:user_agent]), state}
   end
 
-  def terminate(_reason, _state) do
-  end
+  # def terminate(_reason, _state) do
+  # end
 
   ###########################
   # Update pipeline
   ###########################
 
   # see handle_call
-  @spec import_details() :: :ok | :ignore | :error
-  defp import_details do
+  @spec import_details(String) :: :ok | :ignore | :error
+  defp import_details(ua) do
     updatable_forecast()
-    |> download()
+    |> download(ua)
     |> parse()
     |> build_changeset()
     |> update_db()
   end
 
   # Returns the latest forecast, if it needs details populated, or :ignore
+  @spec updatable_forecast() :: %Forecast{} | :ignore
   defp updatable_forecast do
     forecast = Forecast.latest()
-    if Forecast.needs_details?(forecast), do: forecast, else: :ignore
+    if forecast != nil and Forecast.needs_details?(forecast), do: forecast, else: :ignore
   end
 
-  @spec download(String) :: { atom, any }
-  defp download(%Forecast{uri: url} = forecast) when is_binary(url) do
+  @spec download(String, String) :: { atom, any }
+  defp download(%Forecast{uri: url} = forecast, user_agent) when is_binary(url) do
     Logger.info("DetailsBroker downloading " <> url)
     # TODO: Could specify retry with :ignore when status code deems appropriate
-    case HTTPoison.get(url) do
+    case HTTPoison.get(url, [{"User-Agent", user_agent}]) do
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
         { :ok, body, forecast }
       {:ok, %HTTPoison.Response{status_code: code, body: _}} ->
@@ -86,7 +89,7 @@ defmodule Fairbanks.Importing.DetailsBroker do
         Logger.error("[Details] Download error: " <> inspect(err)) && :error
     end
   end
-  defp download(:ignore), do: :ignore
+  defp download(:ignore, _), do: :ignore
 
   # Handle download response
   @spec parse({:ok , String} | :ignore | :error) :: tuple | list | :ignore | :error
@@ -146,14 +149,18 @@ defmodule Fairbanks.Importing.DetailsBroker do
     |> String.split("/")
     |> List.last
   end
+  def soundcloud_src_to_id(nil), do: nil
 
   defp parse_soundcloud(html_tree) when is_tuple(html_tree) or is_list(html_tree) do
     src = Floki.find(html_tree, ".soundcloud iframe")
           |> Floki.attribute("src")
-          |> hd
+          |> first_attr
     id = soundcloud_src_to_id(src)
     %{iframe_src: src, id: id}
   end
+
+  defp first_attr([]), do: nil
+  defp first_attr(attr_list) when is_list(attr_list), do: hd attr_list
 
   # Section: details, extended, or recreational
   defp parse_section(html_tree) when is_tuple(html_tree) or is_list(html_tree) do

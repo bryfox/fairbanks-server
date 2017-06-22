@@ -3,7 +3,7 @@ defmodule Fairbanks.Importing.Supervisor do
   alias Fairbanks.Importing
 
   def start_link() do
-    Supervisor.start_link(__MODULE__, :ok)
+    Supervisor.start_link(__MODULE__, :ok, name: __MODULE__)
   end
 
   def init(:ok) do

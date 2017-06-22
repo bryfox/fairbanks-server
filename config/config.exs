@@ -7,7 +7,12 @@ use Mix.Config
 
 # General application configuration
 config :fairbanks,
-  ecto_repos: [Fairbanks.Repo]
+  ecto_repos: [Fairbanks.Repo],
+  user_agent: {:system, "FAIRBANKS_USER_AGENT"},
+  data_feed_url: {:system, "FAIRBANKS_FEED_URL"}
+
+config :fairbanks, Fairbanks.Importing,
+  autostart: true
 
 # Configures the endpoint
 config :fairbanks, Fairbanks.Endpoint,
@@ -16,6 +21,7 @@ config :fairbanks, Fairbanks.Endpoint,
   render_errors: [view: Fairbanks.ErrorView, accepts: ~w(html json)],
   pubsub: [name: Fairbanks.PubSub,
            adapter: Phoenix.PubSub.PG2]
+
 
 # Configures Elixir's Logger
 config :logger, :console,

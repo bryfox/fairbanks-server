@@ -3,11 +3,10 @@ defmodule Fairbanks.ForecastTest do
 
   alias Fairbanks.Forecast
 
-  @valid_attrs %{description: "some content", publication_date: ~D[2017-06-15], title: "Daily Forecast: June 15, 2017", uri: "http://www.fairbanksmuseum.org/eye-on-the-sky/2017-06-15", id: "7488a646-e31f-11e4-aace-600308960662", }
   @invalid_attrs %{}
 
   test "changeset with valid attributes" do
-    changeset = Forecast.changeset(%Forecast{}, @valid_attrs)
+    changeset = Forecast.changeset(%Forecast{}, valid_attrs())
     assert changeset.valid?
   end
 
@@ -17,7 +16,7 @@ defmodule Fairbanks.ForecastTest do
   end
 
   test "changeset persists all model attributes" do
-    changeset = Forecast.changeset(%Forecast{}, @valid_attrs)
+    changeset = Forecast.changeset(%Forecast{}, valid_attrs())
     forecast = Repo.insert! changeset
     refute forecast.details_processed
     changeset = Forecast.changeset(forecast, %{details_processed: true})
@@ -66,4 +65,7 @@ defmodule Fairbanks.ForecastTest do
     refute Forecast.needs_details?(forecast)
   end
 
+  defp valid_attrs do
+    Fairbanks.ModelCase.valid_forecast_attrs()
+  end
 end
