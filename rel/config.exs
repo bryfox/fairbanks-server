@@ -30,7 +30,7 @@ end
 environment :prod do
   set include_erts: true
   set include_src: false
-  # set cookie: :""
+  set cookie: :"${FAIRBANKS_RELEASE_COOKIE_PROD}"
 end
 
 # You may define one or more releases in this file.
@@ -44,4 +44,3 @@ release :fairbanks do
     :runtime_tools
   ]
 end
-

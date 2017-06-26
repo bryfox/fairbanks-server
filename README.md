@@ -33,7 +33,7 @@ Ready to run in production? Please [check our deployment guides](http://www.phoe
 
 ### Distillery & EDeliver
 
-[EDeliver](https://github.com/boldpoker/edeliver) coordinates with distillery on a build server, and delivers products for running on one or more destination servers.
+[EDeliver](https://github.com/boldpoker/edeliver) coordinates with distillery on a build server, and delivers products for running on one or more destination servers. EDeliver configuration lives in `.deliver/`.
 
 ```
 # 1. Build on the build server
@@ -54,7 +54,7 @@ $ mix edeliver ping staging
 
 `--verbose` is used here; `--debug` can be used for all output.
 
-Distillery is the build tool. To build locally, work with distillery directly.
+Distillery is the build tool. To build locally, work with distillery directly. Distillery configuration lives in `/rel`.
 
 ```
 $ mix release.clean
