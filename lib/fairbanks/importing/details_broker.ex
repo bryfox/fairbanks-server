@@ -100,7 +100,7 @@ defmodule Fairbanks.Importing.DetailsBroker do
   # Top-level comments produce a list html_tree, but we can operate on it the same
   @spec build_changeset(tuple | :error | :ignore) :: tuple | :error | :ignore
   defp build_changeset({dom, forecast}) when is_tuple(dom) or is_list(dom) do
-    soundcloud = parse_soundcloud(Floki.find(dom, ".soundcloud"))
+    soundcloud = parse_soundcloud(Floki.find(dom, "#detailed .soundcloud"))
     detailed = parse_section(Floki.find(dom, "#detailed"))
     extended = parse_section(Floki.find(dom, "#extended"))
     recreational = parse_section(Floki.find(dom, "#recreational"))
