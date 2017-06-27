@@ -75,10 +75,24 @@ defmodule Fairbanks.ForecastControllerTest do
   test "renders the forecast summary as an object when source is an array", %{conn: conn} do
     scraped_data = [%{content: "p1"}, %{content: "p2"}]
     forecast = Repo.insert! %Forecast{detailed_summary: Map.new([{Forecast.summary_key, scraped_data}])}
-    conn = put conn, forecast_path(conn, :update, forecast), forecast: @valid_attrs
+    conn = get conn, forecast_path(conn, :update, forecast), forecast: @valid_attrs
     summary = json_response(conn, 200)["data"]["detailed_summary"]
     assert is_map(summary)
     assert is_list(summary[Forecast.summary_key |> Atom.to_string])
+  end
+
+  test "renders today's forecast", %{conn: conn} do
+    today = Fairbanks.Timestamp.today()
+    Repo.insert! %Forecast{publication_date: today}
+    conn = get conn, forecast_path(conn, :show, "today")
+    data = json_response(conn, 200)["data"]
+    assert data["publication_date"] == Date.to_iso8601(today)
+  end
+
+  test "renders an empty forecast when today's doesn't exist", %{conn: conn} do
+    conn = get conn, forecast_path(conn, :show, "today")
+    data = json_response(conn, 200)["data"]
+    assert data["publication_date"] == nil
   end
 
 end

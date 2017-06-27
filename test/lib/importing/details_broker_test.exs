@@ -35,7 +35,6 @@ defmodule Fairbanks.Importing.DetailsBrokerTest do
     attrs = Map.put(attrs, :uri, "http://localhost:9001")
     changeset = Forecast.changeset(%Forecast{}, attrs)
     Fairbanks.Repo.insert!(changeset)
-    resp = {:ok, %HTTPoison.Response{status_code: 200, body: ""}}
     assert :error = DetailsBroker.import(broker)
   end
 

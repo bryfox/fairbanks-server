@@ -65,6 +65,14 @@ defmodule Fairbanks.Forecast do
     |> Repo.one
   end
 
+  def for_today do
+    today = Fairbanks.Timestamp.today()
+    __MODULE__
+    |> Query.where(publication_date: ^today)
+    |> Query.first(desc: :created_at)
+    |> Repo.one
+  end
+
   @doc """
   Returns true if the latest saved forecast is from today,
   or if no saved forecast is found.

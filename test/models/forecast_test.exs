@@ -24,50 +24,67 @@ defmodule Fairbanks.ForecastTest do
     assert forecast.details_processed
   end
 
-  test "today's model is latest" do
-    forecast = Repo.insert! %Forecast{}
-    assert Forecast.latest.id == forecast.id
+  describe "latest" do
+    test "today's model is latest" do
+      forecast = Repo.insert! %Forecast{}
+      assert Forecast.latest.id == forecast.id
+    end
+
+    test "we have the latest" do
+      Repo.insert! %Forecast{publication_date: Date.utc_today()}
+      assert Forecast.have_latest?
+    end
+
+    test "we don't have the latest when publication date is missing" do
+      Repo.insert! %Forecast{}
+      refute Forecast.have_latest?
+    end
+
+    test "we don't have the latest when publication date is old" do
+      Repo.insert! %Forecast{publication_date: ~D[2017-01-01]}
+      refute Forecast.have_latest?
+    end
+
+    test "latest returns most recent" do
+      Repo.insert! %Forecast{publication_date: ~D[2017-01-01]}
+      forecast = Repo.insert! %Forecast{publication_date: ~D[2017-01-02]}
+      assert Forecast.latest().id == forecast.id
+    end
   end
 
-  test "we have the latest" do
-    Repo.insert! %Forecast{publication_date: Date.utc_today()}
-    assert Forecast.have_latest?
+  describe "needed" do
+    test "an existing forecast is not needed" do
+      Repo.insert! %Forecast{publication_date: ~D[2017-01-01]}
+      refute Forecast.needed_for_date?(~D[2017-01-01])
+    end
+
+    test "a missing forecast is needed" do
+      Repo.insert! %Forecast{publication_date: ~D[2017-01-01]}
+      assert Forecast.needed_for_date?(~D[2017-01-02])
+    end
+
+    test "A forecast doesn't need details if it's marked as processed" do
+      forecast = Repo.insert! %Forecast{details_processed: true, soundcloud_id: "123"}
+      refute Forecast.needs_details?(forecast)
+    end
+
+    test "A forecast does need details if it lacks soundcloud_id" do
+      forecast = Repo.insert! %Forecast{details_processed: true}
+      assert Forecast.needs_details?(forecast)
+    end
   end
 
-  test "we don't have the latest when publication date is missing" do
-    Repo.insert! %Forecast{}
-    refute Forecast.have_latest?
-  end
+  describe "today's forecast" do
+    test "is queryable" do
+      forecast = Repo.insert! %Forecast{publication_date: Fairbanks.Timestamp.today()}
+      assert Forecast.for_today().publication_date == forecast.publication_date
+    end
 
-  test "we don't have the latest when publication date is old" do
-    Repo.insert! %Forecast{publication_date: ~D[2017-01-01]}
-    refute Forecast.have_latest?
-  end
-
-  test "an existing forecast is not needed" do
-    Repo.insert! %Forecast{publication_date: ~D[2017-01-01]}
-    refute Forecast.needed_for_date?(~D[2017-01-01])
-  end
-
-  test "a missing forecast is needed" do
-    Repo.insert! %Forecast{publication_date: ~D[2017-01-01]}
-    assert Forecast.needed_for_date?(~D[2017-01-02])
-  end
-
-  test "latest returns most recent" do
-    Repo.insert! %Forecast{publication_date: ~D[2017-01-01]}
-    forecast = Repo.insert! %Forecast{publication_date: ~D[2017-01-02]}
-    assert Forecast.latest().id == forecast.id
-  end
-
-  test "A forecast doesn't need details if it's marked as processed" do
-    forecast = Repo.insert! %Forecast{details_processed: true, soundcloud_id: "123"}
-    refute Forecast.needs_details?(forecast)
-  end
-
-  test "A forecast does need details if it lacks soundcloud_id" do
-    forecast = Repo.insert! %Forecast{details_processed: true}
-    assert Forecast.needs_details?(forecast)
+    test "returns nil when there is none" do
+      forecast = Repo.insert! %Forecast{publication_date: Date.from_iso8601!("2015-01-01")}
+      assert forecast.id == Forecast.latest().id
+      assert nil == Forecast.for_today()
+    end
   end
 
   defp valid_attrs do

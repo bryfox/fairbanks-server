@@ -25,6 +25,7 @@ defmodule Fairbanks.Router do
 
     scope "/v1" do
       get "/", ApiStatusController, :index
+      get "/forecasts/today", ForecastController, :show_today
       resources "/forecasts", ForecastController, except: [:new, :edit]
     end
   end

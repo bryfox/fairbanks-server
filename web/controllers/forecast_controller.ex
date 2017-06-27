@@ -1,13 +1,14 @@
 defmodule Fairbanks.ForecastController do
   use Fairbanks.Web, :controller
-
   alias Fairbanks.Forecast
 
+  # GET /api/v1/forecasts
   def index(conn, _params) do
     forecasts = Repo.all(Forecast)
     render(conn, "index.json", forecasts: forecasts)
   end
 
+  # POST /api/v1/forecasts
   def create(conn, %{"forecast" => forecast_params}) do
     changeset = Forecast.changeset(%Forecast{}, forecast_params)
 
@@ -24,11 +25,20 @@ defmodule Fairbanks.ForecastController do
     end
   end
 
+  # Special handling for the typical case
+  # GET /api/v1/forecasts/today
+  def show_today(conn, %{}) do
+    forecast = Forecast.for_today()
+    render(conn, "show.json", forecast: forecast)
+  end
+
+  # GET /api/v1/forecasts/:id
   def show(conn, %{"id" => id}) do
     forecast = Repo.get!(Forecast, id)
     render(conn, "show.json", forecast: forecast)
   end
 
+  # PUT /api/v1/forecasts/:id
   def update(conn, %{"id" => id, "forecast" => forecast_params}) do
     forecast = Repo.get!(Forecast, id)
     changeset = Forecast.changeset(forecast, forecast_params)

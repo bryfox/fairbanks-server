@@ -20,7 +20,7 @@ defmodule Fairbanks.Mixfile do
     [mod: {Fairbanks, []},
      applications: [:phoenix, :phoenix_pubsub, :phoenix_html, :cowboy, :logger, :gettext,
                     :phoenix_ecto, :postgrex, :httpoison,
-                    :feeder_ex, :floki,
+                    :feeder_ex, :floki, :tzdata,
                     # Add edeliver to the END of the list
                     :edeliver
                     ]]
@@ -45,9 +45,10 @@ defmodule Fairbanks.Mixfile do
      {:httpoison, "~> 0.11"},
      {:feeder_ex, "~> 1.1.0"},
      {:floki, "~> 0.17.0"},
+     {:tzdata, "~> 0.5.12"},
      {:edeliver, "~> 1.4.2"},
      {:distillery, "~> 1.4", warn_missing: false},
-     {:mock, "~> 0.2.0", only: :test}
+     {:mock, "~> 0.2.0", only: :test},
    ]
   end
 
