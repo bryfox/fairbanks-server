@@ -61,8 +61,13 @@ defmodule Fairbanks.ForecastTest do
   end
 
   test "A forecast doesn't need details if it's marked as processed" do
-    forecast = Repo.insert! %Forecast{details_processed: true}
+    forecast = Repo.insert! %Forecast{details_processed: true, soundcloud_id: "123"}
     refute Forecast.needs_details?(forecast)
+  end
+
+  test "A forecast does need details if it lacks soundcloud_id" do
+    forecast = Repo.insert! %Forecast{details_processed: true}
+    assert Forecast.needs_details?(forecast)
   end
 
   defp valid_attrs do

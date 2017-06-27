@@ -3,6 +3,10 @@ defmodule Fairbanks.Importing.FeedBroker do
   use GenServer
   alias Fairbanks.Forecast
 
+  # Default time we should begin checking during the day.
+  # Latest is UTC-0400 (EST); one hour earlier for EDT is OK.
+  @earliest_utc_update_hour 9
+
   @doc """
   Once started, will await an :import call
   """
@@ -113,7 +117,7 @@ defmodule Fairbanks.Importing.FeedBroker do
     unless late_enough, do: Logger.info("Scraping disabled (time of day)")
     late_enough && not(Forecast.have_latest?)
   end
-  defp fetch_rss?, do: fetch_rss?(5)
+  defp fetch_rss?, do: fetch_rss?(@earliest_utc_update_hour)
 
   # Insert into DB if needed. Return an accumulator to be used by parse_entries/1.
   defp create_forecast(%FeederEx.Entry{} = entry, acc) do

@@ -32,9 +32,11 @@ defmodule Fairbanks.Forecast do
   Use this to determine whether details still need to be downloaded for a forecast.
   Checking one of the detail data fields directly may be incorrect if updating was aborted
   because of an unrecoverable error.
+  The soundcloud_id is considered to be an additional detail needed; retries should happen
+  when details have been processed but we're still missing audio.
   """
   def needs_details?(%__MODULE__{} = forecast), do:
-    forecast.details_processed != true
+    forecast.details_processed != true || forecast.soundcloud_id == nil
 
   @doc """
   Return true if a forecast for this date is needed;
