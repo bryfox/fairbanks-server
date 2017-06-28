@@ -1,15 +1,9 @@
-# Fairbanks
+# fairbanks-server
 
-To start your Phoenix app:
+Fairbanks server is an Elixir application using [Phoenix](http://www.phoenixframework.org/) to deliver weather updates to mobile clients.
 
-  * Install dependencies with `mix deps.get`
-  * Create and migrate your database with `mix ecto.create && mix ecto.migrate`
-  * Install Node.js dependencies with `npm install`
-  * Start Phoenix endpoint with `mix phoenix.server`
+See [Fairbanks](https://github.com/bryfox/Fairbanks).
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
-
-Ready to run in production? Please [check our deployment guides](http://www.phoenixframework.org/docs/deployment).
 
 ## Release & Deploy
 
