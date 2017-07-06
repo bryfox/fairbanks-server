@@ -69,3 +69,9 @@ $ MIX_ENV=prod mix phoenix.digest
 ## Mocks server
 
 The mocks directory contains a couple of static html files, and a simple server for development. Run `cd mocks && python server.py` (assuming python 2.x).
+
+## Remote shell
+
+1. SSH to server
+2. `iex --name observer --remsh fairbanks@127.0.0.1 --cookie $ERL_SECRET_COOKIE`
+

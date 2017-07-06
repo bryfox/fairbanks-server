@@ -6,7 +6,6 @@ defmodule Fairbanks.Importing.DetailsBrokerTest do
   import Mock
 
   @test_user_agent "test_user_agent"
-  @soundcloud_iframe_src "https://w.soundcloud.com/player/?visual=false&url=https%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F328230856&show_artwork=false&maxwidth=400px&maxheight=166px&show_comments=false&color=F7941E"
 
   setup do
     {:ok, broker} = DetailsBroker.start_link(@test_user_agent)
@@ -36,14 +35,6 @@ defmodule Fairbanks.Importing.DetailsBrokerTest do
     changeset = Forecast.changeset(%Forecast{}, attrs)
     Fairbanks.Repo.insert!(changeset)
     assert :error = DetailsBroker.import(broker)
-  end
-
-  ###########################
-  # Scraping format tests
-  ###########################
-
-  test "soundcloud ID is extracted" do
-    assert "328230856" == DetailsBroker.soundcloud_src_to_id(@soundcloud_iframe_src)
   end
 
 end

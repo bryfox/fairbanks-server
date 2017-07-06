@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<!--
+    This file illustrates a problem encountered in an early published version on 7/6/17:
+    one of the description <p>s contained a leading <br>, which produced output that triggered an error in Poison JSON
+    encoding.
+    n.b. The 7/6 source was updated to remove the <br> before I pulled the source for testing,
+    so this reduced/artificial case is used.
+-->
+<body class="eots-tpl page-2017-07-06 section-eye-on-the-sky sub-section-2017-07-06">    
+        <div class="forecasts">
+<!--             <div id="recreational"><div class="forecast"></div></div>
+            <div id="extended"><div class="forecast"></div></div> -->
+            <ul class="forecast-nav"><li><a href="#detailed"><i class="icon-cloudy"></i><span>Detailed Forecast</span></a></li><li><a href="#extended"><i class="icon-clock-o"></i><span>Extended Forecast</span></a></li><li><a href="#recreational"><i class="icon-skier"></i><span>Recreational Forecast</span></a></li><li><a href="/planetarium/eye-on-the-night-sky/2017-07-06" id="tabbed-eotns-link"><img src="/bundles/applicationcore/images/eots/eye-on-the-night-sky-logo-sm.png" alt="Eye on the Night Sky"/></a></li></ul>            <div id="detailed" class="tab">
+                <div class="forecast">
+                    <h2>Archived Detailed Forecast</h2>
+
+                    <h3>Winds:</h3>
+            <p><br />Winds today light, becoming south 10 to 15 mph from the Green Mountains east, and 10 to 15 mph, gusting to 30 mph from the Green Mountains west, with waves on the open waters of Lake Champlain 1 to 3 feet.  Winds overnight from the south 5 to 15 mph, diminishing to light and variable east of the Green Mountains, with waves on the open waters of Lake Champlain 1 to 3 feet, subsiding late.  Winds on Friday from the southwest 10 to 15 mph, with waves on the open waters of Lake Champlain 1 to 3 feet.  Saturday&#039;s outlook calls for light winds, mainly west less than 10 mph.<br />
+<br />
+***winds and waves may be higher in the vicinity of thunderstorms***<br />
+<br />
+<br />
+For more details on Lake Champlain, go to:  http://forecast.weather.gov/product.php?site=BTV&amp;product=REC&amp;issuedby=BTV</p>
+                    <h3>testing</h3>
+                    <div>
+                        <p>
+                            pcontent<a href="">linkcontent</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+</body>
+</html>

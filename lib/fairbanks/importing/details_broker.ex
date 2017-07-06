@@ -2,6 +2,7 @@ defmodule Fairbanks.Importing.DetailsBroker do
   require Logger
   use GenServer
   alias Fairbanks.Forecast
+  alias Fairbanks.ForecastParser
 
   @doc """
   Once started, will await an :import call
@@ -62,7 +63,6 @@ defmodule Fairbanks.Importing.DetailsBroker do
   defp import_details(ua) do
     updatable_forecast()
     |> download(ua)
-    |> parse()
     |> build_changeset()
     |> update_db()
   end
@@ -92,35 +92,8 @@ defmodule Fairbanks.Importing.DetailsBroker do
   defp download(:ignore, _), do: :ignore
 
   # Handle download response
-  @spec parse({:ok , String} | :ignore | :error) :: tuple | list | :ignore | :error
-  defp parse({:ok, html, forecast}), do: { Floki.parse(html), forecast }
-  defp parse(:ignore), do: :ignore
-  defp parse(:error), do: :error
-
-  # Top-level comments produce a list html_tree, but we can operate on it the same
-  @spec build_changeset(tuple | :error | :ignore) :: tuple | :error | :ignore
-  defp build_changeset({dom, forecast}) when is_tuple(dom) or is_list(dom) do
-    soundcloud = parse_soundcloud(Floki.find(dom, "#detailed .soundcloud"))
-    detailed = parse_section(Floki.find(dom, "#detailed"))
-    extended = parse_section(Floki.find(dom, "#extended"))
-    recreational = parse_section(Floki.find(dom, "#recreational"))
-
-    Logger.debug("Scrape results:")
-    Logger.debug(inspect(soundcloud))
-    Logger.debug(inspect(detailed))
-    Logger.debug(inspect(extended))
-    Logger.debug(inspect(recreational))
-
-    # TODO: may want to update details_processed separately for best effort...
-    # if our scraping fails, we shouldn't keep trying.
-    key = Forecast.summary_key
-    params = %{ details_processed: true,
-                soundcloud_id: soundcloud.id,
-                detailed_summary: Map.new([{key, detailed.summary}]),
-                extended_summary: Map.new([{key, extended.summary}]),
-                recreational_summary: Map.new([{key, recreational.summary}])}
-    Forecast.changeset(forecast, params)
-  end
+  @spec build_changeset({:ok , String} | :ignore | :error) :: tuple | list | :ignore | :error
+  defp build_changeset({:ok, html, forecast}), do: ForecastParser.html_to_changeset(html, forecast)
   defp build_changeset(:ignore), do: :ignore
   defp build_changeset(:error), do: :error
 
@@ -134,40 +107,5 @@ defmodule Fairbanks.Importing.DetailsBroker do
   end
   defp update_db(:ignore), do: :ignore
   defp update_db(:error), do: :error
-
-  ###########################
-  # Helpers
-  ###########################
-
-  # "https://w.soundcloud.com/player/?visual=false&url=https%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F328230856&show_artwork=false&maxwidth=400px&maxheight=166px&show_comments=false&color=F7941E"
-  # -> "328230856"
-  # Public for unit testing
-  def soundcloud_src_to_id(src) when is_binary(src) do
-    Regex.named_captures(~r/&url=(?<soundcloud_url>[^&]+)/, src)
-    |> Map.fetch!("soundcloud_url")
-    |> URI.decode
-    |> String.split("/")
-    |> List.last
-  end
-  def soundcloud_src_to_id(nil), do: nil
-
-  defp parse_soundcloud(html_tree) when is_tuple(html_tree) or is_list(html_tree) do
-    src = Floki.find(html_tree, ".soundcloud iframe")
-          |> Floki.attribute("src")
-          |> first_attr
-    id = soundcloud_src_to_id(src)
-    %{iframe_src: src, id: id}
-  end
-
-  defp first_attr([]), do: nil
-  defp first_attr(attr_list) when is_list(attr_list), do: hd attr_list
-
-  # Section: details, extended, or recreational
-  defp parse_section(html_tree) when is_tuple(html_tree) or is_list(html_tree) do
-    forecast = html_tree |> Floki.find(".forecast")
-    html = forecast |> Floki.raw_html
-    summary = forecast |>Floki.find("h1, h2, h3, p") |> Enum.map(fn(tup) -> %{tag: elem(tup, 0), content: hd elem(tup, 2)} end)
-    %{html: html, summary: summary}
-  end
 
 end
