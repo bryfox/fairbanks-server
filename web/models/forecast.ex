@@ -87,7 +87,7 @@ defmodule Fairbanks.Forecast do
   # Returns true if the given forecast's publication date is before today (UTC).
   # @spec outdated?(Forecast.t) :: boolean | :error
   defp outdated?(%{publication_date: nil}), do: true
-  defp outdated?(%{publication_date: publication_date}), do: publication_date < Date.utc_today()
+  defp outdated?(%{publication_date: publication_date}), do: Date.compare(publication_date, Date.utc_today()) == :lt
 
   @doc """
   Builds a changeset based on the `struct` and `params`.
