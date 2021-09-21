@@ -1,7 +1,7 @@
 defmodule Fairbanks.ForecastControllerTest do
-  use Fairbanks.ConnCase
+  use FairbanksWeb.ConnCase
 
-  alias Fairbanks.Forecast
+  alias FairbanksWeb.Forecast
   @valid_attrs %{description: "some content", publication_date: "Thu, 15 Jun 2017 00:00:00 -0400", title: "Daily Forecast: June 15, 2017", uri: "http://www.fairbanksmuseum.org/eye-on-the-sky/2017-06-15", id: "7488a646-e31f-11e4-aace-600308960662"}
   @invalid_attrs %{}
 

@@ -1,7 +1,7 @@
 defmodule Fairbanks.Importing.DetailsBroker do
   require Logger
   use GenServer
-  alias Fairbanks.Forecast
+  alias FairbanksWeb.Forecast
   alias Fairbanks.ForecastParser
 
   @doc """

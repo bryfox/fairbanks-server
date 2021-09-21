@@ -1,7 +1,7 @@
 defmodule Fairbanks.ForecastTest do
   use Fairbanks.ModelCase
 
-  alias Fairbanks.Forecast
+  alias FairbanksWeb.Forecast
 
   @invalid_attrs %{}
 

@@ -1,3 +1,3 @@
-defmodule Fairbanks.PageViewTest do
-  use Fairbanks.ConnCase, async: true
+defmodule FairbanksWeb.PageViewTest do
+  use FairbanksWeb.ConnCase, async: true
 end

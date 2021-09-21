@@ -1,4 +1,4 @@
-defmodule Fairbanks.ApiStatusView do
+defmodule FairbanksWeb.ApiStatusView do
   use Fairbanks.Web, :view
 
   def render("index.json", %{status: status}) do

@@ -64,7 +64,13 @@ defmodule Fairbanks.ModelCase do
   end
 
   def valid_forecast_attrs do
-    %{description: "some content", publication_date: ~D[2017-06-15], title: "Daily Forecast: June 15, 2017", uri: "http://example.com/2017-06-15", id: "7488a646-e31f-11e4-aace-600308960662" }    
+    %{
+      description: "some content",
+      publication_date: ~D[2017-06-15],
+      title: "Daily Forecast: June 15, 2017",
+      uri: "http://example.com/2017-06-15",
+      id: "7488a646-e31f-11e4-aace-600308960662"
+    }
   end
 
 end

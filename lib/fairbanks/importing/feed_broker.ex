@@ -1,7 +1,7 @@
 defmodule Fairbanks.Importing.FeedBroker do
   require Logger
   use GenServer
-  alias Fairbanks.Forecast
+  alias FairbanksWeb.Forecast
 
   # Default time we should begin checking during the day.
   # Latest is UTC-0400 (EST); one hour earlier for EDT is OK.

@@ -2,7 +2,7 @@ defmodule Fairbanks.Importing.DetailsBrokerTest do
   use Fairbanks.ModelCase
 
   alias Fairbanks.Importing.DetailsBroker
-  alias Fairbanks.Forecast
+  alias FairbanksWeb.Forecast
   import Mock
 
   @test_user_agent "test_user_agent"

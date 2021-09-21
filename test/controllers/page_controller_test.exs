@@ -1,5 +1,5 @@
 defmodule Fairbanks.PageControllerTest do
-  use Fairbanks.ConnCase
+  use FairbanksWeb.ConnCase
 
   test "GET /", %{conn: conn} do
     conn = get conn, "/"

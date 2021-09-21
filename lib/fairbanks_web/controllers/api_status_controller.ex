@@ -1,4 +1,4 @@
-defmodule Fairbanks.ApiStatusController do
+defmodule FairbanksWeb.ApiStatusController do
   use Fairbanks.Web, :controller
 
   def index(conn, _params) do

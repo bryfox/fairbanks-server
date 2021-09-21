@@ -2,7 +2,7 @@ defmodule Fairbanks.ForecastParserTest do
   use Fairbanks.ModelCase
 
   alias Fairbanks.ForecastParser
-  alias Fairbanks.Forecast
+  alias FairbanksWeb.Forecast
 
   @attrs %{description: "content", publication_date: ~D[2017-07-06], title: "Daily", uri: "-", id: Ecto.UUID.generate() }
   @soundcloud_iframe_src "https://w.soundcloud.com/player/?visual=false&url=https%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F328230856&show_artwork=false&maxwidth=400px&maxheight=166px&show_comments=false&color=F7941E"

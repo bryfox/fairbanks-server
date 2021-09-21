@@ -1,4 +1,4 @@
-defmodule Fairbanks.Forecast do
+defmodule FairbanksWeb.Forecast do
   use Fairbanks.Web, :model
 
   alias Ecto.Query

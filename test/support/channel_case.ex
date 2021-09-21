@@ -1,4 +1,4 @@
-defmodule Fairbanks.ChannelCase do
+defmodule FairbanksWeb.ChannelCase do
   @moduledoc """
   This module defines the test case to be used by
   channel tests.
@@ -27,7 +27,7 @@ defmodule Fairbanks.ChannelCase do
 
 
       # The default endpoint for testing
-      @endpoint Fairbanks.Endpoint
+      @endpoint FairbanksWeb.Endpoint
     end
   end
 

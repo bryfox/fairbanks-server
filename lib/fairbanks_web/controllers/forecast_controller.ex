@@ -1,6 +1,6 @@
-defmodule Fairbanks.ForecastController do
+defmodule FairbanksWeb.ForecastController do
   use Fairbanks.Web, :controller
-  alias Fairbanks.Forecast
+  alias FairbanksWeb.Forecast
 
   # GET /api/v1/forecasts
   def index(conn, _params) do
@@ -21,7 +21,7 @@ defmodule Fairbanks.ForecastController do
       {:error, changeset} ->
         conn
         |> put_status(:unprocessable_entity)
-        |> render(Fairbanks.ChangesetView, "error.json", changeset: changeset)
+        |> render(FairbanksWeb.ChangesetView, "error.json", changeset: changeset)
     end
   end
 
@@ -49,7 +49,7 @@ defmodule Fairbanks.ForecastController do
       {:error, changeset} ->
         conn
         |> put_status(:unprocessable_entity)
-        |> render(Fairbanks.ChangesetView, "error.json", changeset: changeset)
+        |> render(FairbanksWeb.ChangesetView, "error.json", changeset: changeset)
     end
   end
 

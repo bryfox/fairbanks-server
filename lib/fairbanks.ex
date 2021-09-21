@@ -11,7 +11,7 @@ defmodule Fairbanks do
       # Start the Ecto repository
       supervisor(Fairbanks.Repo, []),
       # Start the endpoint when the application starts
-      supervisor(Fairbanks.Endpoint, [])
+      supervisor(FairbanksWeb.Endpoint, [])
     ]
 
     # Unless disabled by config, also supervise workers for periodic data fetching

@@ -1,4 +1,4 @@
-defmodule Fairbanks.ChangesetView do
+defmodule FairbanksWeb.ChangesetView do
   use Fairbanks.Web, :view
 
   @doc """

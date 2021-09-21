@@ -1,12 +1,12 @@
-defmodule Fairbanks.ForecastView do
+defmodule FairbanksWeb.ForecastView do
   use Fairbanks.Web, :view
 
   def render("index.json", %{forecasts: forecasts}) do
-    %{data: render_many(forecasts, Fairbanks.ForecastView, "forecast.json")}
+    %{data: render_many(forecasts, FairbanksWeb.ForecastView, "forecast.json")}
   end
 
   def render("show.json", %{forecast: forecast}) do
-    %{data: render_one(forecast, Fairbanks.ForecastView, "forecast.json")}
+    %{data: render_one(forecast, FairbanksWeb.ForecastView, "forecast.json")}
   end
 
   def render("forecast.json", %{forecast: forecast}) do

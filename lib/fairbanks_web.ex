@@ -28,20 +28,21 @@ defmodule Fairbanks.Web do
 
   def controller do
     quote do
-      use Phoenix.Controller
+      use Phoenix.Controller, namespace: FairbanksWeb
 
       alias Fairbanks.Repo
       import Ecto
       import Ecto.Query
 
-      import Fairbanks.Router.Helpers
-      import Fairbanks.Gettext
+      import FairbanksWeb.Router.Helpers
+      import FairbanksWeb.Gettext
     end
   end
 
   def view do
     quote do
-      use Phoenix.View, root: "web/templates"
+      use Phoenix.View, root: "lib/fairbanks_web/templates",
+                        namespace: FairbanksWeb
 
       # Import convenience functions from controllers
       import Phoenix.Controller, only: [get_csrf_token: 0, get_flash: 2, view_module: 1]
@@ -49,9 +50,9 @@ defmodule Fairbanks.Web do
       # Use all HTML functionality (forms, tags, etc)
       use Phoenix.HTML
 
-      import Fairbanks.Router.Helpers
-      import Fairbanks.ErrorHelpers
-      import Fairbanks.Gettext
+      import FairbanksWeb.Router.Helpers
+      import FairbanksWeb.ErrorHelpers
+      import FairbanksWeb.Gettext
     end
   end
 
@@ -68,7 +69,7 @@ defmodule Fairbanks.Web do
       alias Fairbanks.Repo
       import Ecto
       import Ecto.Query
-      import Fairbanks.Gettext
+      import FairbanksWeb.Gettext
     end
   end
 

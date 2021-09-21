@@ -1,4 +1,4 @@
-defmodule Fairbanks.ErrorView do
+defmodule FairbanksWeb.ErrorView do
   use Fairbanks.Web, :view
 
   def render("404.html", _assigns) do

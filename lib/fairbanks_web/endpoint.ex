@@ -1,7 +1,7 @@
-defmodule Fairbanks.Endpoint do
+defmodule FairbanksWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :fairbanks
 
-  socket "/socket", Fairbanks.UserSocket
+  socket "/socket", FairbanksWeb.UserSocket
 
   # Serve at "/" the static files from "priv/static" directory.
   #
@@ -38,5 +38,5 @@ defmodule Fairbanks.Endpoint do
     key: "_fairbanks_key",
     signing_salt: "b6cmBH9d"
 
-  plug Fairbanks.Router
+  plug FairbanksWeb.Router
 end

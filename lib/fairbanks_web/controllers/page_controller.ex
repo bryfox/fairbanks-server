@@ -1,4 +1,4 @@
-defmodule Fairbanks.PageController do
+defmodule FairbanksWeb.PageController do
   use Fairbanks.Web, :controller
 
   def index(conn, _params) do

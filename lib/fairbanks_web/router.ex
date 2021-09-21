@@ -1,4 +1,4 @@
-defmodule Fairbanks.Router do
+defmodule FairbanksWeb.Router do
   use Fairbanks.Web, :router
 
   pipeline :browser do
@@ -13,14 +13,14 @@ defmodule Fairbanks.Router do
     plug :accepts, ["json"]
   end
 
-  scope "/", Fairbanks do
+  scope "/", FairbanksWeb do
     pipe_through :browser # Use the default browser stack
 
     get "/", PageController, :index
   end
 
   # Other scopes may use custom stacks.
-  scope "/api", Fairbanks do
+  scope "/api", FairbanksWeb do
     pipe_through :api
 
     scope "/v1" do

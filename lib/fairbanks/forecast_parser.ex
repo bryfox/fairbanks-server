@@ -4,7 +4,7 @@ defmodule Fairbanks.ForecastParser do
   Repsonsible for taking HTML (string) input and converting to a Forecast changeset.
   """
   require Logger
-  alias Fairbanks.Forecast
+  alias FairbanksWeb.Forecast
 
   @doc """
   html_to_changeset
