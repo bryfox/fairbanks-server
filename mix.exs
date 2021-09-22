@@ -17,13 +17,10 @@ defmodule Fairbanks.Mixfile do
   #
   # Type `mix help compile.app` for more information.
   def application do
-    [mod: {Fairbanks.Application, []},
-     applications: [:phoenix, :phoenix_pubsub, :phoenix_html, :cowboy, :logger, :gettext,
-                    :phoenix_ecto, :postgrex, :httpoison,
-                    :feeder_ex, :floki, :tzdata,
-                    # Add edeliver to the END of the list
-                    :edeliver
-                    ]]
+    [
+      mod: {Fairbanks.Application, []},
+      extra_applications: [:logger]
+    ]
   end
 
   # Specifies which paths to compile per environment.
@@ -40,7 +37,7 @@ defmodule Fairbanks.Mixfile do
       {:ecto_sql, "~> 3.0"},
       {:postgrex, ">= 0.0.0"},
       {:phoenix_html, "~> 2.6"},
-      {:phoenix_live_reload, "~> 1.0", only: :dev},
+      {:phoenix_live_reload, "~> 1.0"},
       {:gettext, "~> 0.11"},
       {:plug_cowboy, "~> 2.1"},
       {:plug, "~> 1.7"},
