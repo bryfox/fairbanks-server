@@ -21,7 +21,8 @@ config :fairbanks, FairbanksWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "6ip2YbzyllCoge7nDgiCLFIqpPnJ0z3MRFw01yCC395d2rVS5ThebIo5cXcwU0Qf",
   render_errors: [view: FairbanksWeb.ErrorView, accepts: ~w(html json)],
-  pubsub_server: Fairbanks.PubSub
+  pubsub_server: Fairbanks.PubSub,
+  live_view: [signing_salt: "WXWqQRLL5LTwgDcIeIM2lhdJTfYPgEuT"]
 
 # Configures Elixir's Logger
 config :logger, :console,

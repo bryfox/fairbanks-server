@@ -63,4 +63,13 @@ config :iex, default_prompt: "!!PRODUCTION!! (%counter)>"
 
 # Finally import the config/prod.secret.exs
 # which should be versioned separately.
+# The secrets file should override the following, at a minimum:
+# config :fairbanks, FairbanksWeb.Endpoint,
+#  secret_key_base: "...",
+#  live_view: [signing_salt: "..."]
+#
+# config :fairbanks, Fairbanks.Repo,
+#  username: "fairbanks",
+#  password: "fairbanksprod",
+#  database: "fairbanks_prod",
 import_config "prod.secret.exs"

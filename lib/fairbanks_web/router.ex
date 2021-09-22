@@ -1,5 +1,6 @@
 defmodule FairbanksWeb.Router do
   use Fairbanks.Web, :router
+  import Phoenix.LiveDashboard.Router
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -17,6 +18,10 @@ defmodule FairbanksWeb.Router do
     pipe_through :browser # Use the default browser stack
 
     get "/", PageController, :index
+
+    if Mix.env() == :dev do
+      live_dashboard "/dashboard"
+    end
   end
 
   # Other scopes may use custom stacks.

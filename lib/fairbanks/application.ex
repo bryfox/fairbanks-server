@@ -9,6 +9,7 @@ defmodule Fairbanks.Application do
     # Define workers and child supervisors to be supervised
     children = [
       Fairbanks.Repo,
+      FairbanksWeb.Telemetry,
       { Phoenix.PubSub, name: Fairbanks.PubSub },
       FairbanksWeb.Endpoint
     ]

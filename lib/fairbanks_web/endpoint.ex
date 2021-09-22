@@ -2,6 +2,7 @@ defmodule FairbanksWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :fairbanks
 
   socket "/socket", FairbanksWeb.UserSocket, websocket: true
+  socket "/live", Phoenix.LiveView.Socket
 
   # Serve at "/" the static files from "priv/static" directory.
   #
