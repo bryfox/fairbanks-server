@@ -17,7 +17,7 @@ defmodule Fairbanks.Mixfile do
   #
   # Type `mix help compile.app` for more information.
   def application do
-    [mod: {Fairbanks, []},
+    [mod: {Fairbanks.Application, []},
      applications: [:phoenix, :phoenix_pubsub, :phoenix_html, :cowboy, :logger, :gettext,
                     :phoenix_ecto, :postgrex, :httpoison,
                     :feeder_ex, :floki, :tzdata,
@@ -35,15 +35,14 @@ defmodule Fairbanks.Mixfile do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:phoenix, "~> 1.4.0"},
-      {:phoenix_pubsub, "~> 1.0"},
+      {:phoenix, "~> 1.5.0"},
       {:phoenix_ecto, "~> 4.0"},
       {:ecto_sql, "~> 3.0"},
       {:postgrex, ">= 0.0.0"},
       {:phoenix_html, "~> 2.6"},
       {:phoenix_live_reload, "~> 1.0", only: :dev},
       {:gettext, "~> 0.11"},
-      {:plug_cowboy, "~> 2.0"},
+      {:plug_cowboy, "~> 2.1"},
       {:plug, "~> 1.7"},
       {:jason, "~> 1.0"},
       {:httpoison, "~> 0.11"},

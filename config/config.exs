@@ -21,9 +21,7 @@ config :fairbanks, FairbanksWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "6ip2YbzyllCoge7nDgiCLFIqpPnJ0z3MRFw01yCC395d2rVS5ThebIo5cXcwU0Qf",
   render_errors: [view: FairbanksWeb.ErrorView, accepts: ~w(html json)],
-  pubsub: [name: Fairbanks.PubSub,
-           adapter: Phoenix.PubSub.PG2]
-
+  pubsub_server: Fairbanks.PubSub
 
 # Configures Elixir's Logger
 config :logger, :console,

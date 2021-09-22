@@ -17,6 +17,7 @@ defmodule Fairbanks.Timestamp do
   # Ecto.Type callbacks
   ###########################
 
+  @impl Ecto.Type
   def type, do: :date
 
   # Cast to a Date from the string input
@@ -25,6 +26,7 @@ defmodule Fairbanks.Timestamp do
   # (e.g. "Fri, 16 Jun 2017 00:00:00 -0400")
   # `dump/1` is able to convert the returned
   # value back into an Ecto native type.
+  @impl Ecto.Type
   @spec cast(String) :: {:ok, Date} | :error
   def cast(string) when is_binary(string) do
     case to_date(string) do
@@ -36,26 +38,37 @@ defmodule Fairbanks.Timestamp do
   @spec cast(Date) :: {:ok, Date} | :error
   def cast(%Date{} = date), do:
     {:ok, date}
-  def cast(_), do:
-    :error
+
+  def cast(_), do: :error
 
   # When loading data from the database,
   # From tuple back to date...
   # See load_date in ecto/type.ex
-  @spec dump(tuple) :: {:ok, Date} | :error
-  def load({year, month, day}),
-    do: {:ok, %Date{year: year, month: month, day: day}}
-  def load(_),
-    do: :error
+  @impl Ecto.Type
+  @spec load(Date) :: {:ok, Date} | :error
+  def load(%Date{} = date), do: {:ok, date}
+
+  @impl Ecto.Type
+  def load(_), do: :error
 
   # Dumps the given term into an Ecto native type for DB insertion
   # (The Date argument, used by the app, has already been cast from a String.)
   # See dump_date in ecto/type.ex
+  @impl Ecto.Type
   @spec dump(Date) :: {:ok, tuple} | :error
   def dump(%Date{year: year, month: month, day: day}), do:
-    {:ok, {year, month, day}}
-  def dump(_), do:
-    :error
+    {:ok, %Date{year: year, month: month, day: day}}
+  def dump(_), do: :error
+
+  @impl Ecto.Type
+  def equal?(nil, nil), do: true
+  def equal?(nil, _), do: false
+  def equal?(_, nil), do: false
+  def equal?(a, b),
+    do: a.equal(b)
+
+  @impl Ecto.Type
+  def embed_as(_), do: :self
 
   ###########################
   # Helpers
