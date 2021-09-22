@@ -34,7 +34,7 @@ defmodule Fairbanks.Web do
       import Ecto
       import Ecto.Query
 
-      import FairbanksWeb.Router.Helpers
+      alias FairbanksWeb.Router.Helpers, as: Routes
       import FairbanksWeb.Gettext
     end
   end
@@ -50,7 +50,7 @@ defmodule Fairbanks.Web do
       # Use all HTML functionality (forms, tags, etc)
       use Phoenix.HTML
 
-      import FairbanksWeb.Router.Helpers
+      alias FairbanksWeb.Router.Helpers, as: Routes
       import FairbanksWeb.ErrorHelpers
       import FairbanksWeb.Gettext
     end

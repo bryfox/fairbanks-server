@@ -25,7 +25,7 @@ defmodule FairbanksWeb.ConnCase do
       import Ecto.Changeset
       import Ecto.Query
 
-      import FairbanksWeb.Router.Helpers
+      alias FairbanksWeb.Router.Helpers, as: Routes
 
       # The default endpoint for testing
       @endpoint FairbanksWeb.Endpoint

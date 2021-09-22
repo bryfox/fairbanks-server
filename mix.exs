@@ -34,21 +34,25 @@ defmodule Fairbanks.Mixfile do
   #
   # Type `mix help deps` for examples and options.
   defp deps do
-    [{:phoenix, "~> 1.3.4"},
-     {:phoenix_pubsub, "~> 1.0"},
-     {:phoenix_ecto, "~> 3.0"},
-     {:postgrex, ">= 0.0.0"},
-     {:phoenix_html, "~> 2.6"},
-     {:phoenix_live_reload, "~> 1.0", only: :dev},
-     {:gettext, "~> 0.11"},
-     {:cowboy, "~> 1.0"},
-     {:httpoison, "~> 0.11"},
-     {:feeder_ex, "~> 1.1.0"},
-     {:floki, "~> 0.17.0"},
-     {:tzdata, "~> 0.5.12"},
-     {:edeliver, "~> 1.4.2"},
-     {:distillery, "~> 1.4", warn_missing: false},
-     {:mock, "~> 0.2.0", only: :test},
+    [
+      {:phoenix, "~> 1.4.0"},
+      {:phoenix_pubsub, "~> 1.0"},
+      {:phoenix_ecto, "~> 4.0"},
+      {:ecto_sql, "~> 3.0"},
+      {:postgrex, ">= 0.0.0"},
+      {:phoenix_html, "~> 2.6"},
+      {:phoenix_live_reload, "~> 1.0", only: :dev},
+      {:gettext, "~> 0.11"},
+      {:plug_cowboy, "~> 2.0"},
+      {:plug, "~> 1.7"},
+      {:jason, "~> 1.0"},
+      {:httpoison, "~> 0.11"},
+      {:feeder_ex, "~> 1.1.0"},
+      {:floki, "~> 0.17.0"},
+      {:tzdata, "~> 0.5.12"},
+      {:edeliver, "~> 1.4.2"},
+      {:distillery, "~> 1.4", warn_missing: false},
+      {:mock, "~> 0.2.0", only: :test},
    ]
   end
 

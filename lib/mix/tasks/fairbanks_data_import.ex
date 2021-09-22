@@ -5,7 +5,7 @@ defmodule Mix.Tasks.Fairbanks.Data.Import do
   @shortdoc "Download remote data, save to DB, and exit"
   def run(_) do
     Application.ensure_all_started(:httpoison)
-    ensure_started(Fairbanks.Repo, [])
+    Mix.Task.run("app.start")
     Fairbanks.Importing.Coordinator.import_once()
   end
 end

@@ -16,7 +16,7 @@ defmodule FairbanksWeb.ForecastController do
       {:ok, forecast} ->
         conn
         |> put_status(:created)
-        |> put_resp_header("location", forecast_path(conn, :show, forecast))
+        |> put_resp_header("location", Routes.forecast_path(conn, :show, forecast))
         |> render("show.json", forecast: forecast)
       {:error, changeset} ->
         conn
